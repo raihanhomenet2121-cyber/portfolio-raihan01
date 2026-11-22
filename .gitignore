@@ -26,3 +26,9 @@ dist-ssr
 # Environment variables
 .env
 .env.local
+
+.vercel
+.env*
+
+# Sanity Studio deployment artifacts
+.sanity
