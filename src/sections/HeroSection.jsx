@@ -1,70 +1,141 @@
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { urlFor } from '../lib/sanityClient'
+import TechOrb from '../components/TechOrb'
+
+const roles = ['Software Engineer', 'Full Stack Developer', 'Mobile App Developer']
+
+const stats = [
+  { value: '10+', label: 'Projects' },
+  { value: '6+',  label: 'Awards' },
+  { value: '9+',  label: 'Tech Stacks' },
+]
+
+const containerVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.15 } },
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  show:   { opacity: 1, y: 0, transition: { duration: 0.6, ease: 'easeOut' } },
+}
 
 export default function HeroSection({ profile }) {
+  const [displayText, setDisplayText] = useState('')
+  const [roleIndex, setRoleIndex]     = useState(0)
+  const [charIndex, setCharIndex]     = useState(0)
+  const [isDeleting, setIsDeleting]   = useState(false)
+
+  useEffect(() => {
+    const currentRole = roles[roleIndex]
+
+    if (!isDeleting && charIndex < currentRole.length) {
+      const t = setTimeout(() => {
+        setDisplayText(currentRole.slice(0, charIndex + 1))
+        setCharIndex(c => c + 1)
+      }, 80)
+      return () => clearTimeout(t)
+    }
+
+    if (!isDeleting && charIndex === currentRole.length) {
+      const t = setTimeout(() => setIsDeleting(true), 1500)
+      return () => clearTimeout(t)
+    }
+
+    if (isDeleting && charIndex > 0) {
+      const t = setTimeout(() => {
+        setDisplayText(currentRole.slice(0, charIndex - 1))
+        setCharIndex(c => c - 1)
+      }, 50)
+      return () => clearTimeout(t)
+    }
+
+    if (isDeleting && charIndex === 0) {
+      setIsDeleting(false)
+      setRoleIndex(r => (r + 1) % roles.length)
+    }
+  }, [charIndex, isDeleting, roleIndex])
+
   return (
-    <section id="hero" className="min-h-screen flex items-center pt-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex flex-col-reverse md:flex-row items-center gap-12">
+    <section id="hero" className="min-h-screen pt-20 flex items-center">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
 
-          {/* Text */}
-          <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7 }}
-            className="flex-1 flex flex-col gap-6"
+        {/* Left — Text */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="flex flex-col gap-6"
+        >
+          <motion.p variants={itemVariants} className="text-indigo-400 font-medium text-lg">
+            Hi, I'm 👋
+          </motion.p>
+
+          <motion.h1
+            variants={itemVariants}
+            className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight bg-gradient-to-r from-white via-indigo-200 to-cyan-400 bg-clip-text text-transparent"
           >
-            <div>
-              <p className="text-indigo-400 font-medium mb-2">Hi, saya 👋</p>
-              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white leading-tight">
-                {profile?.name ?? 'Muhammad Raihan Nugraha'}
-              </h1>
-              <p className="text-xl text-gray-400 mt-3">
-                {profile?.tagline ?? 'Full Stack Developer'}
-              </p>
-            </div>
+            {profile?.name ?? 'Muhammad Raihan Nugraha'}
+          </motion.h1>
 
-            {profile?.bio && (
-              <p className="text-gray-400 leading-relaxed max-w-lg">{profile.bio}</p>
-            )}
-
-            <div className="flex flex-wrap gap-3">
-              <a
-                href="#projects"
-                className="px-6 py-3 bg-indigo-600 hover:bg-indigo-500 text-white rounded-xl font-medium transition-colors"
-              >
-                Lihat Proyek
-              </a>
-              <a
-                href="#contact"
-                className="px-6 py-3 bg-gray-800 hover:bg-gray-700 text-white rounded-xl font-medium transition-colors border border-gray-700"
-              >
-                Hubungi Saya
-              </a>
-            </div>
+          <motion.div variants={itemVariants} className="flex items-center gap-1 h-8">
+            <span className="text-xl text-cyan-400 font-mono">{displayText}</span>
+            <span className="text-xl text-cyan-400 font-mono animate-pulse">|</span>
           </motion.div>
 
-          {/* Photo */}
-          <motion.div
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="flex-shrink-0"
-          >
-            {profile?.photo ? (
-              <img
-                src={urlFor(profile.photo).width(320).height(320).url()}
-                alt={profile.name}
-                className="w-56 h-56 md:w-72 md:h-72 rounded-3xl object-cover border-4 border-indigo-500/30 shadow-2xl shadow-indigo-500/10"
-              />
-            ) : (
-              <div className="w-56 h-56 md:w-72 md:h-72 rounded-3xl bg-gray-800 border-4 border-indigo-500/30 flex items-center justify-center">
-                <span className="text-6xl">👤</span>
+          <motion.p variants={itemVariants} className="text-gray-400 leading-relaxed max-w-md">
+            {profile?.bio ??
+              'A passionate software engineering student from Bandung, Indonesia. I build full-stack web apps, mobile applications, and IoT systems — focused on clean code and great user experience.'}
+          </motion.p>
+
+          {/* Stats */}
+          <motion.div variants={itemVariants} className="flex gap-8">
+            {stats.map(stat => (
+              <div key={stat.label} className="flex flex-col items-center">
+                <span className="text-2xl font-bold text-white">{stat.value}</span>
+                <span className="text-xs text-gray-400 mt-0.5">{stat.label}</span>
               </div>
-            )}
+            ))}
           </motion.div>
 
-        </div>
+          {/* CTA Buttons */}
+          <motion.div variants={itemVariants} className="flex flex-wrap gap-4">
+            <a
+              href="#projects"
+              className="bg-indigo-600 hover:bg-indigo-500 text-white font-semibold rounded-xl px-6 py-3 transition-all duration-200 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5"
+            >
+              View Projects
+            </a>
+            <a
+              href="#contact"
+              className="border border-indigo-500/50 text-indigo-400 hover:bg-indigo-500/10 font-semibold rounded-xl px-6 py-3 transition-all duration-200 hover:-translate-y-0.5"
+            >
+              Contact Me
+            </a>
+          </motion.div>
+
+          {/* Scroll Indicator */}
+          <motion.div
+            variants={itemVariants}
+            className="flex flex-col items-center gap-1 text-gray-500 text-xs w-fit"
+            animate={{ y: [0, 6, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <span>Scroll down</span>
+            <span>↓</span>
+          </motion.div>
+        </motion.div>
+
+        {/* Right — TechOrb */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          className="flex justify-center items-center"
+        >
+          <TechOrb />
+        </motion.div>
+
       </div>
     </section>
   )
