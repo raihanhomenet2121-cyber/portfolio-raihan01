@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -9,5 +9,55 @@ html {
 }
 
 body {
-  @apply bg-gray-950 text-gray-100 font-sans;
+  @apply bg-obsidian text-parchment font-body antialiased;
+}
+
+/* Scrollbar — medieval style */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: #151515; }
+::-webkit-scrollbar-thumb { background: #632D35; border-radius: 6px; border: 2px solid #151515; }
+::-webkit-scrollbar-thumb:hover { background: #C5A46D; }
+
+::selection { background: rgba(197, 164, 109, 0.35); color: #E7D9B9; }
+
+/* Thin gold divider */
+.gold-rule {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(197,164,109,0.7), transparent);
+}
+
+/* Parchment card texture */
+.parchment-panel {
+  background:
+    radial-gradient(ellipse at 20% 10%, rgba(231,217,185,0.06), transparent 55%),
+    radial-gradient(ellipse at 85% 90%, rgba(197,164,109,0.05), transparent 50%),
+    #1E1D1B;
+  border: 1px solid rgba(197,164,109,0.25);
+}
+
+/* Castle animations */
+@keyframes candleFlicker {
+  0%, 100% { opacity: 0.55; }
+  12% { opacity: 0.35; }
+  25% { opacity: 0.65; }
+  40% { opacity: 0.42; }
+  55% { opacity: 0.6; }
+  70% { opacity: 0.38; }
+  85% { opacity: 0.58; }
+}
+
+@keyframes bannerWave {
+  0%, 100% { transform: skewY(0deg) scaleX(1); }
+  30% { transform: skewY(-3deg) scaleX(0.96); }
+  60% { transform: skewY(2.5deg) scaleX(1.03); }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  html { scroll-behavior: auto; }
 }

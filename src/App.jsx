@@ -1,65 +1,81 @@
-import { useEffect, useState } from 'react'
-import { client } from './lib/sanityClient'
+import { lazy, Suspense } from 'react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { AnimatePresence, motion } from 'framer-motion'
+import Hero from './sections/Hero'
+import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
 import AnimatedBackground from './components/AnimatedBackground'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
-import HeroSection from './sections/HeroSection'
-import AboutSection from './sections/AboutSection'
-import ProjectsSection from './sections/ProjectsSection'
-import ExperienceSection from './sections/ExperienceSection'
-import AwardsSection from './sections/AwardsSection'
-import ContactSection from './sections/ContactSection'
+import { profile } from './data/cvData'
 
-const PROFILE_QUERY    = `*[_type == "profile"][0]{ name, tagline, bio, photo, email, linkedin, github, skills, cvFile }`
-const PROJECTS_QUERY   = `*[_type == "project"] | order(order asc){ _id, title, description, images, link, techStack, order, featured }`
-const EXPERIENCE_QUERY = `*[_type == "experience"] | order(order asc){ _id, position, company, logo, startDate, endDate, description, type, order }`
-const AWARDS_QUERY     = `*[_type == "award"] | order(order asc){ _id, name, issuer, year, images, link, order }`
+// Lazy-loaded sections — lighter initial bundle
+const About        = lazy(() => import('./sections/About'))
+const Expertise    = lazy(() => import('./sections/Expertise'))
+const Projects     = lazy(() => import('./sections/Projects'))
+const Achievements = lazy(() => import('./sections/Achievements'))
+const Leadership   = lazy(() => import('./sections/Leadership'))
+const Interests    = lazy(() => import('./sections/Interests'))
+const Contact      = lazy(() => import('./sections/Contact'))
+const ProjectDetail = lazy(() => import('./pages/ProjectDetail'))
 
-export default function App() {
-  const [profile,     setProfile]     = useState(null)
-  const [projects,    setProjects]    = useState([])
-  const [experiences, setExperiences] = useState([])
-  const [awards,      setAwards]      = useState([])
-  const [loading,     setLoading]     = useState(true)
-
-  useEffect(() => {
-    Promise.all([
-      client.fetch(PROFILE_QUERY),
-      client.fetch(PROJECTS_QUERY),
-      client.fetch(EXPERIENCE_QUERY),
-      client.fetch(AWARDS_QUERY),
-    ]).then(([p, pr, ex, aw]) => {
-      setProfile(p)
-      setProjects(pr)
-      setExperiences(ex)
-      setAwards(aw)
-      setLoading(false)
-    }).catch(() => setLoading(false))
-  }, [])
-
-  if (loading) return (
-    <div className="min-h-screen flex items-center justify-center bg-[#030712]">
-      <AnimatedBackground />
-      <div className="flex flex-col items-center gap-4 z-10">
-        <div className="w-12 h-12 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
-        <p className="text-gray-400 text-sm tracking-wide">Loading portfolio...</p>
-      </div>
+function SectionFallback() {
+  return (
+    <div className="py-24 flex justify-center">
+      <div className="w-8 h-8 border-2 border-gold/40 border-t-transparent rounded-full animate-spin" />
     </div>
   )
+}
 
+function Home() {
   return (
-    <div className="min-h-screen bg-[#030712] relative">
-      <AnimatedBackground />
-      <Navbar />
-      <main>
-        <HeroSection    profile={profile} />
-        <AboutSection   profile={profile} />
-        <ProjectsSection projects={projects} />
-        <ExperienceSection experiences={experiences} />
-        <AwardsSection  awards={awards} />
-        <ContactSection profile={profile} />
-      </main>
-      <Footer />
-    </div>
+    <main>
+      <Hero />
+      <Suspense fallback={<SectionFallback />}>
+        <About />
+        <Expertise />
+        <Projects />
+        <Achievements />
+        <Leadership />
+        <Interests />
+        <Contact />
+      </Suspense>
+    </main>
+  )
+}
+
+function AnimatedRoutes() {
+  const location = useLocation()
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{ duration: 0.4 }}
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Home />} />
+          <Route path="/project/:id" element={
+            <Suspense fallback={<SectionFallback />}>
+              <ProjectDetail />
+            </Suspense>
+          } />
+          <Route path="*" element={<Home />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <div className="min-h-screen bg-obsidian relative">
+        <AnimatedBackground />
+        <Navbar />
+        <AnimatedRoutes />
+        <Footer />
+      </div>
+    </BrowserRouter>
   )
 }
