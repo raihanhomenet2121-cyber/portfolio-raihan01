@@ -13,7 +13,7 @@ export default function Contact() {
 
   const channels = [
     { icon: '✉️', label: 'Email', value: profile?.email ?? 'raihanhornenet@gmail.com', href: `mailto:${profile?.email ?? 'raihanhornenet@gmail.com'}` },
-    { icon: '💼', label: 'LinkedIn', value: 'muhammad-raihan-nugraha', href: profile?.linkedin ?? 'https://linkedin.com/in/muhammad-raihan-nugraha' },
+    { icon: '💼', label: 'LinkedIn', value: 'muhammad-raihan-nugraha', href: profile?.linkedin ?? 'https://www.linkedin.com/in/muhammad-raihan-nugraha-498446406/' },
     { icon: '📸', label: 'Instagram', value: '@raihngrh', href: profile?.instagram ?? 'https://instagram.com/raihngrh' },
   ].filter(c => c.value && c.href)
 
@@ -90,11 +90,12 @@ export default function Contact() {
             </a>
           ) : (
             <a
-              href={`mailto:${profile?.email ?? 'raihanhornenet@gmail.com'}`}
+              href="/cv.pdf"
+              download="CV_Muhammad_Raihan_Nugraha.pdf"
               className="group relative inline-flex font-display text-xs sm:text-sm tracking-[0.2em] uppercase px-10 py-4 border border-gold/60 text-gold hover:text-obsidian transition-colors duration-300 overflow-hidden"
             >
               <span className="absolute inset-0 bg-gold translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
-              <span className="relative">Send a Raven ✉</span>
+              <span className="relative">Download CV ↓</span>
             </a>
           )}
         </motion.div>

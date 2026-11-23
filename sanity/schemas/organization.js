@@ -15,6 +15,8 @@ export default {
           { title: 'Student Leadership', value: 'Student Leadership' },
           { title: 'Organization Membership', value: 'Organization Membership' },
           { title: 'Peer Education', value: 'Peer Education' },
+          { title: 'Event Leadership', value: 'Event Leadership' },
+          { title: 'Program Committee', value: 'Program Committee' },
         ],
       },
     },
