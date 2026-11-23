@@ -91,9 +91,9 @@ export default function Projects() {
                     whileInView={{ opacity: 1 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.8 }}
-                    src={urlFor(featured.images[0]).width(900).height(420).url()}
+                    src={urlFor(featured.images[0]).width(960).height(540).url()}
                     alt={featured.title}
-                    className="w-full h-52 sm:h-64 object-cover rounded-lg mb-6 border border-gold/20"
+                    className="w-full aspect-video object-cover rounded-lg mb-6 border border-gold/20"
                   />
                 )}
 
@@ -144,10 +144,10 @@ export default function Projects() {
 
                 {p.images?.length > 0 && (
                   <img
-                    src={urlFor(p.images[0]).width(640).height(320).url()}
+                    src={urlFor(p.images[0]).width(640).height(360).url()}
                     alt={p.title}
                     loading="lazy"
-                    className="w-full h-36 object-cover rounded-md mb-4 border border-gold/15"
+                    className="w-full aspect-video object-cover rounded-md mb-4 border border-gold/15"
                   />
                 )}
 

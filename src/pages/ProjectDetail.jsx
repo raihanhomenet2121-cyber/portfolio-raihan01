@@ -21,13 +21,13 @@ function ImageSlideshow({ images, title }) {
       <AnimatePresence mode="wait">
         <motion.img
           key={current}
-          src={urlFor(images[current]).width(1200).height(560).url()}
+          src={urlFor(images[current]).width(1280).height(720).url()}
           alt={`${title} — ${current + 1}`}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.5 }}
-          className="w-full h-64 sm:h-96 object-cover rounded-lg border border-gold/25"
+          className="w-full aspect-video object-cover rounded-lg border border-gold/25"
         />
       </AnimatePresence>
 
