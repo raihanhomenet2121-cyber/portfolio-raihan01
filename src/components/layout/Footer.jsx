@@ -1,7 +1,9 @@
 import HeraldicEmblem from '../medieval/HeraldicEmblem'
-import { profile } from '../../data/cvData'
+import { useSiteData } from '../../App'
 
 export default function Footer() {
+  const { profile } = useSiteData()
+
   return (
     <footer className="relative border-t border-gold/15 mt-10">
       <div className="gold-rule absolute top-0 left-0 right-0" />
@@ -9,10 +11,10 @@ export default function Footer() {
         <HeraldicEmblem className="w-12 h-12 opacity-70" />
         <div>
           <p className="font-display text-xs tracking-[0.35em] text-gold/80 uppercase">
-            {profile.principle}
+            {profile?.principle ?? 'FORESIGHT IN VISION. ENDEAVOUR IN ACTION.'}
           </p>
           <p className="font-mono text-[10px] text-parchment/30 mt-3 tracking-widest">
-            © {new Date().getFullYear()} {profile.name} — The Chronicles of Raihan
+            © {new Date().getFullYear()} {profile?.name ?? 'Muhammad Raihan Nugraha'} — The Chronicles of Raihan
           </p>
         </div>
       </div>

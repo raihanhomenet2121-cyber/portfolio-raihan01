@@ -3,7 +3,7 @@ import CastleSilhouette from '../components/medieval/CastleSilhouette'
 import FogLayer from '../components/medieval/FogLayer'
 import MedievalParticles from '../components/medieval/MedievalParticles'
 import HeraldicEmblem from '../components/medieval/HeraldicEmblem'
-import { profile } from '../data/cvData'
+import { useSiteData } from '../App'
 
 const container = {
   hidden: {},
@@ -15,6 +15,9 @@ const item = {
 }
 
 export default function Hero() {
+  const { profile } = useSiteData()
+  const p = profile ?? {}
+
   return (
     <section id="top" className="relative min-h-screen flex flex-col overflow-hidden">
       {/* Atmosphere stack */}
@@ -40,56 +43,45 @@ export default function Hero() {
           >
             <HeraldicEmblem className="w-28 h-28" />
           </motion.div>
-          <motion.div
-            animate={{ y: [0, -6, 0] }}
-            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
-          >
+          <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
             <HeraldicEmblem className="relative w-28 h-28" />
           </motion.div>
         </motion.div>
 
-        {/* Chapter label */}
-        <motion.p
-          variants={item}
-          className="font-mono text-[10px] sm:text-xs tracking-[0.6em] text-gold/70 uppercase mb-6"
-        >
+        <motion.p variants={item} className="font-mono text-[10px] sm:text-xs tracking-[0.6em] text-gold/70 uppercase mb-6">
           An archive of knowledge, creations &amp; endeavours
         </motion.p>
 
-        {/* Main headline */}
         <motion.h1
           variants={item}
           className="font-display font-black text-4xl sm:text-6xl lg:text-7xl leading-[1.08] tracking-wide"
         >
           <span className="bg-gradient-to-b from-parchment via-gold to-[#8A6D3B] bg-clip-text text-transparent drop-shadow-[0_2px_18px_rgba(197,164,109,0.25)]">
-            THE CHRONICLES
+            {(p.chronicle ?? 'THE CHRONICLES OF RAIHAN').split(' OF ')[0]}
           </span>
           <br />
           <span className="bg-gradient-to-b from-parchment via-gold to-[#8A6D3B] bg-clip-text text-transparent">
-            OF RAIHAN
+            OF {(p.chronicle ?? 'THE CHRONICLES OF RAIHAN').split(' OF ')[1] ?? 'RAIHAN'}
           </span>
         </motion.h1>
 
-        {/* Supporting statement */}
         <motion.p variants={item} className="font-editorial italic text-xl sm:text-2xl text-mystic mt-8 max-w-2xl">
-          "{profile.motto}"
+          "{p.motto ?? 'An Endeavour Through Knowledge, Technology & Leadership.'}"
         </motion.p>
 
-        {/* Name + identity */}
         <motion.div variants={item} className="mt-12 flex flex-col items-center gap-2">
           <div className="flex items-center gap-4">
             <div className="w-12 h-px bg-gold/50" />
             <p className="font-display text-sm sm:text-base tracking-[0.3em] text-parchment/90 uppercase">
-              {profile.name}
+              {p.name ?? 'Muhammad Raihan Nugraha'}
             </p>
             <div className="w-12 h-px bg-gold/50" />
           </div>
           <p className="font-mono text-[11px] tracking-[0.35em] text-gold/70 uppercase mt-2">
-            {profile.title} · {profile.epithet}
+            {p.title ?? 'Software Engineering'}{p.epithet ? ` · ${p.epithet}` : ''}
           </p>
         </motion.div>
 
-        {/* CTA buttons */}
         <motion.div variants={item} className="flex flex-wrap justify-center gap-4 mt-12">
           <a
             href="#about"

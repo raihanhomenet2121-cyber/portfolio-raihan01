@@ -1,8 +1,10 @@
 import { motion } from 'framer-motion'
 import SectionWrapper from '../components/layout/SectionWrapper'
-import { interests } from '../data/cvData'
+import { useSiteData } from '../App'
 
 export default function Interests() {
+  const { interests } = useSiteData()
+
   return (
     <SectionWrapper
       id="interests"
@@ -11,32 +13,37 @@ export default function Interests() {
       subtitle="Beyond the archives and workshops — where the scribe rests and grows."
       particles
     >
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
-        {interests.map((it, i) => (
-          <motion.div
-            key={it.name}
-            initial={{ opacity: 0, y: 30, scale: 0.95 }}
-            whileInView={{ opacity: 1, y: 0, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55, delay: i * 0.08 }}
-            whileHover={{ y: -6 }}
-            className="group parchment-panel rounded-lg border border-gold/20 hover:border-gold/50 transition-all duration-400 p-7 flex flex-col items-center text-center gap-3 hover:shadow-[0_8px_40px_rgba(197,164,109,0.12)] cursor-default"
-          >
-            <motion.span
-              className="text-3xl transition-transform duration-400 group-hover:scale-125"
-              animate={{ y: [0, -4, 0] }}
-              transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: 'easeInOut' }}
+      {(!interests || interests.length === 0) ? (
+        <p className="text-center text-parchment/40 font-mono text-sm py-16">
+          — Beyond the kingdom awaits its tales. Add interests via Sanity Studio —
+        </p>
+      ) : (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-5 max-w-4xl mx-auto">
+          {interests.map((it, i) => (
+            <motion.div
+              key={it._id}
+              initial={{ opacity: 0, y: 30, scale: 0.95 }}
+              whileInView={{ opacity: 1, y: 0, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.55, delay: i * 0.08 }}
+              whileHover={{ y: -6 }}
+              className="group parchment-panel rounded-lg border border-gold/20 hover:border-gold/50 transition-all duration-400 p-7 flex flex-col items-center text-center gap-3 hover:shadow-[0_8px_40px_rgba(197,164,109,0.12)] cursor-default"
             >
-              {it.icon}
-            </motion.span>
-            <p className="font-display text-[11px] tracking-[0.15em] uppercase text-parchment/75 group-hover:text-gold transition-colors">
-              {it.name}
-            </p>
-          </motion.div>
-        ))}
-      </div>
+              <motion.span
+                className="text-3xl transition-transform duration-400 group-hover:scale-125"
+                animate={{ y: [0, -4, 0] }}
+                transition={{ duration: 3 + i * 0.4, repeat: Infinity, ease: 'easeInOut' }}
+              >
+                {it.icon ?? '✦'}
+              </motion.span>
+              <p className="font-display text-[11px] tracking-[0.15em] uppercase text-parchment/75 group-hover:text-gold transition-colors">
+                {it.name}
+              </p>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
-      {/* Countryside divider */}
       <motion.div
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}

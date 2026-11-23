@@ -1,54 +1,30 @@
 export default {
   name: 'award',
-  title: 'Award',
+  title: 'Achievement (Hall of Achievements)',
   type: 'document',
   fields: [
+    { name: 'name', title: 'Nama Penghargaan', type: 'string', validation: (Rule) => Rule.required() },
     {
-      name: 'name',
-      title: 'Nama Penghargaan',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
+      name: 'category', title: 'Kategori', type: 'string',
+      options: {
+        list: [
+          { title: 'Academic Excellence', value: 'Academic Excellence' },
+          { title: 'Competition & Recognition', value: 'Competition & Recognition' },
+          { title: 'Religious & Educational', value: 'Religious & Educational' },
+          { title: 'Leadership Recognition', value: 'Leadership Recognition' },
+        ],
+      },
     },
+    { name: 'year', title: 'Tahun / Periode', type: 'string', description: 'Contoh: 2024 atau 2021 – 2024' },
     {
-      name: 'issuer',
-      title: 'Pemberi Penghargaan / Institusi',
-      type: 'string',
-    },
-    {
-      name: 'year',
-      title: 'Tahun',
-      type: 'number',
-    },
-    {
-      name: 'images',
-      title: 'Foto Dokumentasi / Slideshow',
-      type: 'array',
+      name: 'images', title: 'Foto Dokumentasi', type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
-      description: 'Upload beberapa foto dokumentasi penghargaan',
     },
-    {
-      name: 'link',
-      title: 'Link Event / Referensi (opsional)',
-      type: 'url',
-    },
-    {
-      name: 'order',
-      title: 'Urutan Tampil',
-      type: 'number',
-    },
+    { name: 'link', title: 'Link Event / Referensi (opsional)', type: 'url' },
+    { name: 'order', title: 'Urutan Tampil', type: 'number' },
   ],
-  orderings: [
-    {
-      title: 'Urutan Tampil',
-      name: 'orderAsc',
-      by: [{ field: 'order', direction: 'asc' }],
-    },
-  ],
+  orderings: [{ title: 'Urutan', name: 'orderAsc', by: [{ field: 'order', direction: 'asc' }] }],
   preview: {
-    select: {
-      title: 'name',
-      subtitle: 'issuer',
-      media: 'images.0',
-    },
+    select: { title: 'name', subtitle: 'category', media: 'images.0' },
   },
 }
