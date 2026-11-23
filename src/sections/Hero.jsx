@@ -3,6 +3,7 @@ import CastleSilhouette from '../components/medieval/CastleSilhouette'
 import FogLayer from '../components/medieval/FogLayer'
 import MedievalParticles from '../components/medieval/MedievalParticles'
 import HeraldicEmblem from '../components/medieval/HeraldicEmblem'
+import { urlFor } from '../lib/sanityClient'
 import { useSiteData } from '../App'
 
 const container = {
@@ -34,17 +35,35 @@ export default function Hero() {
         animate="show"
         className="relative z-10 flex-1 flex flex-col items-center justify-center text-center px-4 pt-24 pb-40"
       >
-        {/* Animated heraldic emblem */}
-        <motion.div variants={item} className="mb-8 relative">
+        {/* Portrait medallion */}
+        <motion.div variants={item} className="mb-6 relative">
           <motion.div
-            className="absolute inset-0 blur-xl"
-            animate={{ opacity: [0.3, 0.65, 0.3] }}
+            className="absolute -inset-2 rounded-full bg-gold/30 blur-xl"
+            animate={{ opacity: [0.3, 0.6, 0.3] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          />
+          <motion.div
+            animate={{ y: [0, -6, 0] }}
+            transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
+            className="relative"
           >
-            <HeraldicEmblem className="w-28 h-28" />
-          </motion.div>
-          <motion.div animate={{ y: [0, -6, 0] }} transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}>
-            <HeraldicEmblem className="relative w-28 h-28" />
+            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full p-[3px] bg-gradient-to-b from-gold via-[#8A6D3B] to-gold/60 shadow-[0_0_30px_rgba(197,164,109,0.35)]">
+              <div className="w-full h-full rounded-full overflow-hidden border-2 border-obsidian bg-obsidian">
+                {p.photo ? (
+                  <img
+                    src={urlFor(p.photo).width(300).height(300).fit('crop').url()}
+                    alt={p.name ?? 'Profile portrait'}
+                    className="w-full h-full object-cover"
+                    loading="eager"
+                  />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center">
+                    <HeraldicEmblem className="w-16 h-16" />
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-16 h-px bg-gold/60" />
           </motion.div>
         </motion.div>
 

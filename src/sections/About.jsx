@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion'
 import SectionWrapper from '../components/layout/SectionWrapper'
 import OrnamentalFrame from '../components/medieval/OrnamentalFrame'
+import { urlFor } from '../lib/sanityClient'
 import { useSiteData } from '../App'
 
 export default function About() {
@@ -28,6 +29,30 @@ export default function About() {
             <div className="absolute -top-4 right-8 w-9 h-9 rounded-full bg-burgundy shadow-lg shadow-burgundy/40 flex items-center justify-center rotate-6">
               <span className="font-display text-[10px] text-gold">R</span>
             </div>
+
+            {/* Portrait */}
+            {profile?.photo && (
+              <div className="flex items-center gap-5 mb-7">
+                <div className="shrink-0 w-20 h-20 sm:w-24 sm:h-24 rounded-full p-[2px] bg-gradient-to-b from-gold via-[#8A6D3B] to-gold/50 shadow-[0_0_20px_rgba(197,164,109,0.3)]">
+                  <div className="w-full h-full rounded-full overflow-hidden border-2 border-obsidian">
+                    <img
+                      src={urlFor(profile.photo).width(200).height(200).fit('crop').url()}
+                      alt={profile.name ?? 'Portrait'}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <p className="font-display text-base sm:text-lg tracking-[0.15em] text-parchment uppercase">
+                    {profile?.name ?? 'Muhammad Raihan Nugraha'}
+                  </p>
+                  <p className="font-mono text-[10px] tracking-[0.3em] text-gold/70 uppercase mt-1.5">
+                    {profile?.title}{profile?.epithet ? ` · ${profile.epithet}` : ''}
+                  </p>
+                </div>
+              </div>
+            )}
 
             <p className="font-mono text-[10px] tracking-[0.4em] text-gold/60 uppercase mb-5">
               Professional Summary
